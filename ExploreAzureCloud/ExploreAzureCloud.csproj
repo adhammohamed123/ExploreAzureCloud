@@ -4,6 +4,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationInsightsResourceId>/subscriptions/27d93d68-284d-4565-acf8-966bd5588e16/resourceGroups/learning-azure-rg/providers/microsoft.insights/components/simple-app-service-AppInsights</ApplicationInsightsResourceId>
+    <UserSecretsId>b2ec0dcb-3b07-416e-9f5e-b1cfb8101652</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.17.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+  </ItemGroup>
 
 </Project>
