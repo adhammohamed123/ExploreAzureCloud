@@ -22,7 +22,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapRazorPages()
