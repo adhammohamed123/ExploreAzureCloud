@@ -14,6 +14,7 @@ namespace ExploreAzureCloud.Pages
 
         public void OnGet()
         {
+            throw new Exception("Test App Insights.");
         }
     }
 
