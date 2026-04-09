@@ -17,6 +17,7 @@ namespace ExploreAzureCloud.Pages
         public void OnGet()
         {
             ViewData["SomeConfigs"] = configuration["Configs:SomeConfigs"];
+            ViewData["Secret"] = configuration["Secret"];
         }
     }
 }
