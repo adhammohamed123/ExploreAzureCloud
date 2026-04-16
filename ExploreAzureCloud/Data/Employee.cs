@@ -62,8 +62,8 @@ namespace ExploreAzureCloud.Data
 
             var connectionStr = configuration.GetConnectionString("AzureSqlConStr"); // we add it to local user secrets
 
-            if (connectionStr == null)
-                throw new ArgumentNullException(" no connection string found are you sure it is added in secrets");
+            //if (connectionStr == null)
+                //throw new ArgumentNullException(" no connection string found are you sure it is added in secrets");
 
             var contextoptions = new DbContextOptionsBuilder<ApplicationDbContext>();
 
