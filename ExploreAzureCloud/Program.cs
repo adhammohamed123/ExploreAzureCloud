@@ -1,5 +1,11 @@
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
+using ExploreAzureCloud.Data;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Net.WebRequestMethods;
 var builder = WebApplication.CreateBuilder(args);
 
 var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
@@ -15,6 +21,14 @@ builder.Services.AddRazorPages();
 //{
 //    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
 //});
+
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    // get connection string from azure keyvault
+    options.UseAzureSql(builder.Configuration.GetConnectionString("AzureSqlConStr"), sqloptions => sqloptions.EnableRetryOnFailure());
+});
+
 
 var app = builder.Build();
 
