@@ -17,7 +17,8 @@ namespace ExploreAzureCloud.Data
 
         [ForeignKey(nameof(Department))] // this is convention already
         public required Guid DepartmentId { get; set; }
-        public  Department Department { get; set; }
+        
+        public virtual Department Department { get; set; }
     }
 
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ExploreAzureCloud.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExploreAzureCloud.Pages.Employees
 {
@@ -25,8 +26,8 @@ namespace ExploreAzureCloud.Pages.Employees
         }
 
         [BindProperty]
-        public Employee Employee { get; set; } = default!;
-
+        public EmployeeDto Employee { get; set; } = default!;
+        
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
@@ -34,11 +35,25 @@ namespace ExploreAzureCloud.Pages.Employees
             {
                 return Page();
             }
-
-            _context.Employees.Add(Employee);
+            var EmployeeEntity = new Employee()
+            {
+                Name=Employee.Name,
+                Phone=Employee.Phone,
+                DepartmentId=Employee.DepartmentId
+            };
+            _context.Employees.Add(EmployeeEntity);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
     }
+}
+
+public class EmployeeDto
+{
+    [MaxLength(100)]
+    public required string Name { get; set; }
+    [MaxLength(12)]
+    public required string Phone{ get; set; }
+    public required Guid DepartmentId { get; set; }
 }
