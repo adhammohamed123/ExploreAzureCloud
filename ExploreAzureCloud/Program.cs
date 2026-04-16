@@ -25,7 +25,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    // get connection string from azure keyvault
+    // get connection string from azure keyvault (this done in runtime, so update db fail Design time) --> sol: DesginTime Factory or Store in Local Secret
     options.UseAzureSql(builder.Configuration.GetConnectionString("AzureSqlConStr"), sqloptions => sqloptions.EnableRetryOnFailure());
 });
 
@@ -39,7 +39,13 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    using var scope =  app.Services.CreateScope();
+    using var dbcontext=  scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+    await dbcontext.Database.MigrateAsync();
+}
 app.UseHttpsRedirection();
 
 app.UseRouting();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,5 +41,35 @@ namespace ExploreAzureCloud.Data
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Department> Departments => Set<Department>();
         
+    }
+
+
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    {
+
+
+
+        public ApplicationDbContext CreateDbContext(string[] args)
+        {
+
+            var configuration = new ConfigurationBuilder()
+                                 .SetBasePath(Directory.GetCurrentDirectory())
+                                 .AddJsonFile("appsettings.json", optional: true)
+                                 .AddJsonFile("appsettings.Development.json", optional: true)
+                                 .AddUserSecrets<ApplicationDbContextFactory>()
+                                 .AddEnvironmentVariables()
+                                 .Build();
+
+            var connectionStr = configuration.GetConnectionString("AzureSqlConStr"); // we add it to local user secrets
+
+            if (connectionStr == null)
+                throw new ArgumentNullException(" no connection string found are you sure it is added in secrets");
+
+            var contextoptions = new DbContextOptionsBuilder<ApplicationDbContext>();
+
+            contextoptions.UseAzureSql(connectionStr, options => options.EnableRetryOnFailure());
+            
+            return new ApplicationDbContext(contextoptions.Options);
+        }
     }
 }
