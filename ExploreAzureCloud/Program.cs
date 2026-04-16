@@ -1,8 +1,13 @@
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
-builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential()
+    //,new AzureKeyVaultConfigurationOptions() {
+    //ReloadInterval = TimeSpan.FromHours(1) reload SnapShot Every 1 Hour
+    //}
+    );
 
 // Add services to the container.
 builder.Services.AddRazorPages();
