@@ -2,6 +2,8 @@ using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
 using ExploreAzureCloud.Data;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -14,6 +16,20 @@ builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredent
     //ReloadInterval = TimeSpan.FromHours(1) reload SnapShot Every 1 Hour
     //}
     );
+
+// add Always Encryption Keyvault Provider to enc /dec data and access key
+// Create the AKV provider using Azure.Identity (recommended)
+var azureCredential = new DefaultAzureCredential(); // this line can be reusable here 👆
+var akvProvider = new SqlColumnEncryptionAzureKeyVaultProvider(azureCredential);
+
+// Register globally (once per application)
+SqlConnection.RegisterColumnEncryptionKeyStoreProviders(
+    new Dictionary<string, SqlColumnEncryptionKeyStoreProvider>
+    {
+        { SqlColumnEncryptionAzureKeyVaultProvider.ProviderName, akvProvider }
+    });
+
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
